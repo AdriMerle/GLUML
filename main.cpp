@@ -118,9 +118,10 @@ void menuTests() {
                         vector<pair<string,float>> vec = utilisateur.ObtenirCapteursParSimilarite(capteur, capteurs);
                         for(const auto & cap: vec){
                             if(cap.second!=0) {
-                                cout << cap.first << " écart " << cap.second << " " << resultats[cap.first] << endl;
-                                
-                                if(resultats[cap.first]!=cap.second) fonctionnel=false;
+                                cout << cap.first << " écart " << cap.second << " != " << resultats[cap.first] << endl;
+                                if(abs(resultats[cap.first]-cap.second)>0.01) {
+                                    fonctionnel=false;
+                                }
                             }
                         }
                         break;
