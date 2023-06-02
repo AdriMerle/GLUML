@@ -7,18 +7,16 @@ using namespace std;
 
 
 
-Capteur * Particulier::listerMonCapteur()const{
+Capteur Particulier::listerMonCapteur() const{
     return monCapteur;
 }
 
 void Particulier::afficherScore() const{
-    cout<<"Le score de "<<mail<<" est de "<<score<<endl;
+    cout<<"Le score de "<< id <<" est de "<<score<<endl;
 }
 
-void Particulier::ajouterCapteur(Capteur & c){
-    if(monCapteur==NULL){
-        monCapteur=&c;
-    }
+void Particulier::ajouterCapteur(Capteur c){
+    monCapteur=c;
 }
 
 // Particulier::~Particulier(){

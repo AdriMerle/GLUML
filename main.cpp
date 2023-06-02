@@ -25,6 +25,7 @@ void testerParser() {
         cout << "SensorID: " << capteur.id << endl;
         cout << "Latitude: " << capteur.position.lat << endl;
         cout << "Longitude: " << capteur.position.lng << endl;
+        int i=0;
         for (const auto & mesure : capteur.mesures){
             cout << "SensorID: " << mesure.idCapteur << endl;
             cout << "Timestamp: " << mesure.timestamp << endl;
@@ -34,6 +35,8 @@ void testerParser() {
             cout << "NO2: " << mesure.NO2 << endl;
             cout << "PM10: " << mesure.PM10 << endl;
             cout << endl;
+            i++;
+            if(i>=5) break;
         }
     }
 
@@ -44,14 +47,14 @@ void testerParser() {
         cout << endl;
     }
 
-    Capteur * c;
+    Capteur c;
     for(const Particulier & utilisateur : parser.obtenirUtilisateurs()) {
         utilisateur.afficherScore();
         cout << "Fiable: " << utilisateur.getFiable() << endl;
         cout << "Capteur: " << endl;
         c = utilisateur.listerMonCapteur();
-        cout << "   " << c->id << endl;
-        cout << "   " << c->position << endl;
+        cout << "   " << c.id << endl;
+        cout << "   " << c.position << endl;
         cout << endl;
     }
 }
