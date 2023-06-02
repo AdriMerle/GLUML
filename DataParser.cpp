@@ -1,6 +1,5 @@
 #include "DataParser.h"
 
-
 time_t StringToTimeT(const string& dateString) {
     tm tm = {};
     istringstream iss(dateString);
@@ -85,6 +84,7 @@ void DataParser::parserCapteurs() {
     string line;
     while (getline(file, line)) {
         Capteur capteur;
+        capteur.valide = true;
         istringstream iss(line);
         string field;
 
@@ -154,7 +154,7 @@ void DataParser::parserMesures() {
             cerr << "Error parsing SensorID" << endl;
             continue;
         }
-
+        mesure.idCapteur = (it)->id;
         // Gaz
         if (getline(iss, field, ';')) {
             
@@ -277,7 +277,7 @@ void DataParser::parserAttributs() {
 // Constructeur
 DataParser::DataParser(const string path) {
     datapath = path;
-    obtenirPurificateurs();
+    parserPurificateurs();
     parserCapteurs();
     parserUtilisateurs();
     parserAttributs();

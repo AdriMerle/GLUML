@@ -1,81 +1,99 @@
 #include "Utilisateur.h"
 
-float Utilisateur::MoyenneIQARegion (const Point & coord,  const vector<Capteur> & capteurs, float rayon) const
+float Utilisateur::MoyenneIQARegion(const Point & coord, const vector<Capteur> & capteurs, float rayon) const
 {
-float IQA = 0;
-if (rayon!=0)
-{
-    //int compteur=0;
-    //vector<Capteur>::const_iterator it;
-    // for (it = capteurs.begin();it!=capteurs.end();it++)
-    // {
-    //     if(it->valide && it->position.Distance(coord)<=rayon)
-    //     {
-    //         IQA+=CalculIQA(*it,time(0),time(0));
-    //         compteur++;
-    //     }
-    // }
-    // IQA=IQA/compteur;
+    float IQA = 0;
+    time_t now = time(nullptr);
+    tm date = *localtime(&now);
 
-}
-else
-{
-    int diviseur=0;
-    vector<Capteur>::const_iterator it;
-    for (it = capteurs.begin();it!=capteurs.end();it++)
+    date.tm_mday -= 1;
+    std::time_t modifiedTime = 0; //std::mktime(&date)
+
+    if (rayon!=0)
     {
-        if(it->valide && it->position.Distance(coord)<=10)
+        int compteur=0;
+        for (const auto & c : capteurs)
         {
-            // if(it->position==coord)
-            // {
-            //     IQA=CalculIQA(*it,time(0),time(0));
-            //     diviseur = 1;
-            //     break;
-            // }
-            // else
-            // {
-            //     IQA+=CalculIQA(*it,time(0),time(0))*(1/(it->position.Distance(coord)));
-            //     diviseur += 1/(it->position.Distance(coord));
-            // }
             
+            if(c.valide && c.position.Distance(coord)<=rayon)
+            {
+                IQA+=CalculIQA(c,modifiedTime,time(nullptr));
+                compteur++;
+            }
         }
+        IQA=IQA/compteur;
+
     }
+    else
+    {
+        int diviseur=0;
+        for(const auto & c : capteurs) {
+            if(c.valide && c.position.Distance(coord)<=10) {
+                if(c.position==coord) {
+                    IQA=CalculIQA(c,modifiedTime,time(nullptr));
+                    diviseur = 1;
+                    break;
+                }
+                else {
+                    IQA+=CalculIQA(c,modifiedTime,time(nullptr))*(1/(c.position.Distance(coord)));
+                    diviseur += 1/(c.position.Distance(coord));
+                }
+            }
+        }
     IQA=IQA/diviseur;
-}
+    }
     return IQA;
 }
 
-/*map<int,float> Utilisateur::ObtenirCapteursParSimilarite(const Capteur & c) const{
-    map<int,float> Capteurs;
-    return Capteurs;
-}*/
+ bool Utilisateur::sortByValue(const pair<string,float> p1, const pair<string,float> p2){
 
+    return (p1.second<p2.second);
+ }
 
+vector<pair<string,float>> Utilisateur::ObtenirCapteursParSimilarite(const Capteur & ref, const vector<Capteur> & capteurs)const {
+    map<string,float> Capteurs;
+    time_t now = time(nullptr);
+    tm date = *localtime(&now);
 
-double Utilisateur::CalculIQA(const Capteur & c, const vector <Mesure> & mesures,time_t debut,time_t fin) const{
+    date.tm_mday -= 1;
+    std::time_t modifiedTime = 0; // std::mktime(&date); //obtenir la date du jour précédent
+    double IQAref=CalculIQA(ref,modifiedTime,time(nullptr));
 
-    double IQA=0;
+    date.tm_mday -= 10;
+    modifiedTime = 0;// std::mktime(&date);
 
-    vector <Mesure>::const_iterator it;
-
-    for(it=mesures.begin() ; it!=mesures.end() ; it++){
-        if(it->idCapteur==c.id && it->timestamp>=debut && it->timestamp<=fin ){
-            IQA+= (*it).calculIQAJournee();
+    for(const auto & c :capteurs){
+        if(c.valide && c.id != ref.id){
+            Capteurs[c.id]=abs(CalculIQA(c, modifiedTime, time(nullptr)) - IQAref);
         }
     }
 
-    float nbSecondes=difftime(fin,debut);
-    int nbJours= (int)(nbSecondes/(3600*24));
+    vector<pair<string,float>> vec;
+    map<string,float>::const_iterator ita;
+    for(const auto & c: Capteurs){
+        vec.push_back(make_pair(c.first, c.second));
+    }
 
-    return (IQA/nbJours);
-
-    
+    sort(vec.begin(),vec.end(),sortByValue);
+    vec.resize(20);
+    return vec;
 }
 
-Utilisateur::Utilisateur() {
+double CalculIQA(const Capteur & c, time_t debut, time_t fin) {
+    double IQA=0;
+    int compteur=0;
     
-}
-
-Utilisateur::~Utilisateur() {
+    for(const auto & m : c.mesures) {
+        if(m.timestamp>=debut && m.timestamp<=fin ){
+            IQA += m.calculIQAJournee();
+            compteur++;
+        }
+    }
     
+    // float nbSecondes=difftime(fin,debut);
+    // int nbJours= (int)(nbSecondes/(3600*24));
+    // if(nbJours==0){
+    //     nbJours=1;
+    // }
+    return (IQA/compteur);
 }

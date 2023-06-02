@@ -115,7 +115,6 @@ float Mesure::calculIQAJournee() const{
     tab[2]=valeurToIndiceNO2();
     tab[3]=valeurToIndicePM10();
     float max=tab[0];
-
     for(int i=1 ; i<4 ; i++){
         if(tab[i]>max){
             max=tab[i];
@@ -124,5 +123,5 @@ float Mesure::calculIQAJournee() const{
 
     delete [] tab;
 
-    return max;
+    return max*10;
 }

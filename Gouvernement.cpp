@@ -17,3 +17,13 @@ vector<Purificateur> Gouvernement::listerDonneesPurificateurs() const{
 void Gouvernement::observerImpactPurificateur(const Purificateur & p) const{
 
 }
+
+void Gouvernement::bannirCapteur(Capteur c, vector<Particulier> & listeParticuliers) {
+    c.valide=false;
+    for(auto & u : listeParticuliers){
+        if(u.listerMonCapteur().id==c.id){          
+            u.setFiable(false);
+            break;
+        }
+    } 
+}
