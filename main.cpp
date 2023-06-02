@@ -79,8 +79,8 @@ int main() {
     while(1){
         cout << "=== MENU PRINCIPAL ===" << endl; 
         cout << "\t-1: Menu Tests" << endl;
-        cout << "\t2: Calculer l'IQA" << endl; 
         cout << "\t0: Quit" << endl;
+        cout << "\t1: Calculer l'IQA" << endl; 
         string input;
         cout<<"Choix: ";
         cin>>input;

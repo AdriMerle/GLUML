@@ -3,8 +3,8 @@
 using namespace std;
 
 
-int Mesure::valeurtoIndiceO3()const{
-    i=0;
+int Mesure::valeurToIndiceO3()const{
+    int i=0;
     if(O3<=29 && O3>=0){
         i=1;
     }else if(O3<=54 && O3>=30){
@@ -29,8 +29,8 @@ int Mesure::valeurtoIndiceO3()const{
     return i;
     
 }
-int Mesure::valeurtoIndiceSO2()const{
-     i=0;
+int Mesure::valeurToIndiceSO2()const{
+    int i=0;
     if(SO2<39 && SO2>0){
         i=1;
     }else if(SO2<=79 && SO2>=40){
@@ -54,8 +54,8 @@ int Mesure::valeurtoIndiceSO2()const{
     }
     return i;
 }
-int Mesure::valeurtoIndiceNO2()const{
- i=0;
+int Mesure::valeurToIndiceNO2()const{
+    int i=0;
     if(NO2<29 && NO2>0){
         i=1;
     }else if(NO2<=54 && NO2>=30){
@@ -81,8 +81,8 @@ int Mesure::valeurtoIndiceNO2()const{
 }
 
 
-int Mesure::valeurtoIndicePM10()const{
-    i=0;
+int Mesure::valeurToIndicePM10()const{
+    int i=0;
     if(PM10<6 && PM10>0){
         i=1;
     }else if(PM10<=13 && PM10>=7){
@@ -108,8 +108,8 @@ int Mesure::valeurtoIndicePM10()const{
 }
 
 
-float calculIQAJournee()const{
-    int[] tab= new tab[4];
+float Mesure::calculIQAJournee() const{
+    int* tab= new int[4];
     tab[0]=valeurToIndiceO3();
     tab[1]=valeurToIndiceSO2();
     tab[2]=valeurToIndiceNO2();

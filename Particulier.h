@@ -1,4 +1,4 @@
-#if ! defined(PARTICULIER_H)
+#if ! defined (PARTICULIER_H)
 #define PARTICULIER_H
 
 #include "Capteur.h"

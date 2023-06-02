@@ -1,4 +1,4 @@
-#if ! defined(FOURNISSEUR_H)
+#if ! defined (FOURNISSEUR_H)
 #define FOURNISSEUR_H
 
 #include"Utilisateur.h"
