@@ -202,7 +202,7 @@ void DataParser::parserUtilisateurs() {
 
         // UserID
         if (getline(iss, field, ';')) {
-            user.id = stof(field);
+            user.id = field;
         } else {
             cerr << "Error parsing UserID" << endl;
             continue;
@@ -279,7 +279,7 @@ DataParser::DataParser(const string path) {
     datapath = path;
     obtenirPurificateurs();
     parserCapteurs();
-    // parserUtilisateurs();
+    parserUtilisateurs();
     parserAttributs();
     parserMesures();
 }

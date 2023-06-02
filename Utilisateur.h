@@ -27,12 +27,12 @@ public:
 
     Utilisateur();
 
-    Utilisateur(int _id,string _mail,string _mdp):id(_id),mail(_mail),mdp(_mdp){};
+    Utilisateur(string _id,string _mail,string _mdp): id(_id),mail(_mail),mdp(_mdp){};
 
     virtual ~Utilisateur();
 
 
-    int id;
+    string id;
     string mail;
     string mdp;
 

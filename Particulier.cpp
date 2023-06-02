@@ -7,8 +7,8 @@ using namespace std;
 
 
 
-Capteur Particulier::listerMonCapteur()const{
-    return *monCapteur;
+Capteur * Particulier::listerMonCapteur()const{
+    return monCapteur;
 }
 
 void Particulier::afficherScore() const{
@@ -17,8 +17,7 @@ void Particulier::afficherScore() const{
 
 void Particulier::ajouterCapteur(Capteur & c){
     if(monCapteur==NULL){
-        monCapteur=(Capteur*)malloc(sizeof(Capteur));
-        *monCapteur=c;
+        monCapteur=&c;
     }
 }
 

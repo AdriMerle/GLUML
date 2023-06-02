@@ -24,6 +24,7 @@ public:
     const vector<Purificateur>& obtenirPurificateurs() const {return purificateurs;}
     const vector<Capteur>& obtenirCapteurs() const {return capteurs;}
     const vector<Attribut>& obtenirAttributs() const {return attributs;}
+    const vector<Particulier>& obtenirUtilisateurs() const {return utilisateurs;}
 
     // Constructeur
     DataParser(string datapath = "dataset/");

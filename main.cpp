@@ -3,6 +3,8 @@
 #include <string>
 using namespace std;
 
+DataParser parser;
+
 bool check_number(string str) {
     for (long unsigned int i = 0; i < str.length(); i++)
         if (isdigit(str[i]) == false)   return false;
@@ -10,7 +12,6 @@ bool check_number(string str) {
 }
 
 void testerParser() {
-    DataParser parser = DataParser();
     for (const auto & cleaner : parser.obtenirPurificateurs()) {
         cout << "CleanerID: " << cleaner.id << endl;
         cout << "Latitude: " << cleaner.position.lat << endl;
@@ -42,10 +43,21 @@ void testerParser() {
         cout << "Description: " << attribut.description << endl;
         cout << endl;
     }
+
+    Capteur * c;
+    for(const Particulier & utilisateur : parser.obtenirUtilisateurs()) {
+        utilisateur.afficherScore();
+        cout << "Fiable: " << utilisateur.getFiable() << endl;
+        cout << "Capteur: " << endl;
+        c = utilisateur.listerMonCapteur();
+        cout << "   " << c->id << endl;
+        cout << "   " << c->position << endl;
+        cout << endl;
+    }
 }
 
 void menuTests() {
-    //system("clear");
+    system("clear");
     while(1){
         cout << "=== MENU TESTS ===" << endl; 
         cout << "\t1: Tester le parser" << endl; 
@@ -55,6 +67,7 @@ void menuTests() {
         cin>>input;
         while(!check_number(input)){
             cout << "Entrée invalide. Veuillez recommencer." << endl;
+            cout<<"Choix : ";
             cin>>input;
         }
         int choix = stoi(input);
@@ -75,24 +88,26 @@ void menuTests() {
 }
 
 int main() {
-    //system("clear");
+    system("clear");
+    parser = DataParser();
     while(1){
         cout << "=== MENU PRINCIPAL ===" << endl; 
-        cout << "\t-1: Menu Tests" << endl;
         cout << "\t0: Quit" << endl;
         cout << "\t1: Calculer l'IQA" << endl; 
+        cout << "\t100: Menu Tests" << endl;
         string input;
         cout<<"Choix: ";
         cin>>input;
         while(!check_number(input)){
             cout << "Entrée invalide. Veuillez recommencer." << endl;
+            cout<<"Choix : ";
             cin>>input;
         }
         int choix = stoi(input);
         switch(choix) {
             case 0:
                 goto fin;
-            case -1:
+            case 100:
                 menuTests();
                 break;
             case 1:
