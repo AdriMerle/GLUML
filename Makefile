@@ -1,0 +1,29 @@
+CC = g++
+ECHO = echo
+CFLAGS =  -c -g -ansi -pedantic -Wall -std=c++11 
+MAPFLAG = -DMAP
+SRC = $(wildcard *.cpp)
+HDR = $(wildcard *.h)
+OBJ = $(SRC:.cpp=.o)
+EXE = main
+
+all: $(SRC) $(OBJ) $(EXE)
+
+$(EXE): $(OBJ)
+	@echo "\n\e[0;35m\033[1mEdition des liens\033[0m"
+	$(CC) $(CLAGS) $^ -o $@
+
+%.o : %.cpp $(HDR)
+	@echo "\e[1;33m\033[1mCompilation de" $< "\033[0m"
+	$(CC)   $(CFLAGS) $< -o $@ $(MAPFLAG)
+
+clean:
+	rm *.o $(EXE)
+
+adrian : main.cpp Point.cpp Purificateur.cpp DataParser.cpp Particulier.cpp Utilisateur.cpp
+	g++ -c -g main.cpp Point.cpp Purificateur.cpp DataParser.cpp Particulier.cpp Utilisateur.cpp
+	g++ -o adrian main.o Point.o Purificateur.o DataParser.o Particulier.o Utilisateur.o
+	rm -rf *.o
+
+tests : tests.cpp
+	g++ -o tests tests.cpp

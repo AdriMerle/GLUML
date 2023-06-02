@@ -1,0 +1,9 @@
+all : main
+	./main
+
+main : main.o Point.o Purificateur.o DataParser.o Gouvernement.o
+	g++ -o main main.o Point.o Purificateur.o DataParser.o Gouvernement.o
+	rm -rf *.o
+
+*.o : Point.cpp main.cpp Purificateur.cpp DataParser.cpp Gourvernement.cpp
+	g++ -c Point.cpp main.cpp Purificateur.cpp DataParser.cpp Gouvernement.cpp
