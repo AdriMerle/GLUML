@@ -23,10 +23,6 @@ $(EXE): $(OBJ)
 clean:
 	rm *.o $(EXE)
 
-adrian : main.cpp Point.cpp Purificateur.cpp DataParser.cpp Particulier.cpp Utilisateur.cpp
-	g++ -c -g main.cpp Point.cpp Purificateur.cpp DataParser.cpp Particulier.cpp Utilisateur.cpp
-	g++ -o adrian main.o Point.o Purificateur.o DataParser.o Particulier.o Utilisateur.o
-	rm -rf *.o
-
 tests : tests.cpp
 	g++ -o tests tests.cpp
+	./tests

@@ -9,12 +9,17 @@ DataParser parser;
 
 // Clock
 clock_t ta;
-clock_t tb = NULL;
+clock_t tb = 0;
 
 void cstart() { ta = clock(); }
-void cstop() { tb = tb==NULL ? clock() : tb; }
+void cstop() { tb = tb==0 ? clock() : tb; }
 void cprint() { if (ta != 0 && tb != 0) cout << (tb - ta)/1000 << " ms" << endl; }
-void creset() {ta = 0; tb = NULL;}
+void creset() {ta = 0; tb = 0;}
+
+void printTest(bool res) {cout << "Résultat du test : ";
+    if(res) cout << "validé" << endl;
+    else cout << "échoué" << endl;
+}
 
 
 bool check_number(string str) {
@@ -24,7 +29,7 @@ bool check_number(string str) {
 }
 
 void testerParser() {
-    for (const auto & cleaner : parser.obtenirPurificateurs()) {
+    for (const Purificateur & cleaner : parser.obtenirPurificateurs()) {
         cout << "CleanerID: " << cleaner.id << endl;
         cout << "Latitude: " << cleaner.position.lat << endl;
         cout << "Longitude: " << cleaner.position.lng << endl;
@@ -33,12 +38,12 @@ void testerParser() {
         cout << endl;
     }
     
-    for (const auto & capteur : parser.obtenirCapteurs()) {
+    for (const Capteur & capteur : parser.obtenirCapteurs()) {
         cout << "SensorID: " << capteur.id << endl;
         cout << "Latitude: " << capteur.position.lat << endl;
         cout << "Longitude: " << capteur.position.lng << endl;
         int i=0;
-        for (const auto & mesure : capteur.mesures){
+        for (const Mesure & mesure : capteur.mesures){
             cout << "SensorID: " << mesure.idCapteur << endl;
             cout << "Timestamp: " << mesure.timestamp << endl;
             cout << "Date: " << ctime(&mesure.timestamp) << endl;
@@ -52,7 +57,7 @@ void testerParser() {
         }
     }
 
-    for(const auto & attribut : parser.obtenirAttributs()) {
+    for(const Attribut & attribut : parser.obtenirAttributs()) {
         cout << "AttributID: " << attribut.id << endl;
         cout << "Unit: " << attribut.unit << endl;
         cout << "Description: " << attribut.description << endl;
@@ -80,11 +85,16 @@ void menuTests() {
         cout << "\t0: Retourner au menu principal" << endl;
         cout << "\t1: Tester le parser" << endl; 
         cout << "\t2: Obtenir liste capteurs par similarité" << endl;
+        cout << "\t3: Calculer l'IQA sur une région donnée" << endl;
         string input;
         string id;
         vector<Capteur> capteurs;
         map<string, float> resultats;
-        bool fonctionnel;
+        bool fonctionnel = true;
+        float moyenneAttendue;
+        float moyenneCalculee;
+        Point p;
+        int rayon;
         cout<<"Choix: ";
         cin>>input;
         while(!check_number(input)){
@@ -103,22 +113,22 @@ void menuTests() {
                 id = "Sensor0";
                 capteurs = parser.obtenirCapteurs();
                 capteurs.resize(10);
-                resultats["Sensor3"] = 1.0137;
-                resultats["Sensor2"] = 1.34247;
-                resultats["Sensor7"] = 1.93151;
-                resultats["Sensor8"] = 5.77397;
-                resultats["Sensor9"] = 10.3973;
-                resultats["Sensor4"] = 11.2123;
-                resultats["Sensor1"] = 11.274;
-                resultats["Sensor5"] = 37.6575;
-                resultats["Sensor6"] = 38.5069;
-                fonctionnel = true;
-                for (const auto & capteur : capteurs) {
+                resultats["Sensor3"] = 1.0137f;
+                resultats["Sensor2"] = 1.34247f;
+                resultats["Sensor7"] = 1.93151f;
+                resultats["Sensor8"] = 5.77397f;
+                resultats["Sensor9"] = 10.3973f;
+                resultats["Sensor4"] = 11.2123f;
+                resultats["Sensor1"] = 11.274f;
+                resultats["Sensor5"] = 37.6575f;
+                resultats["Sensor6"] = 38.5069f;
+
+                cout << "Test de similarité au capteur " << id << " sur les 10 premiers capteurs de la liste." << endl;
+                for (const Capteur & capteur : capteurs) {
                     if(capteur.id==id){
                         vector<pair<string,float>> vec = utilisateur.ObtenirCapteursParSimilarite(capteur, capteurs);
                         for(const auto & cap: vec){
                             if(cap.second!=0) {
-                                cout << cap.first << " écart " << cap.second << " != " << resultats[cap.first] << endl;
                                 if(abs(resultats[cap.first]-cap.second)>0.01) {
                                     fonctionnel=false;
                                 }
@@ -127,7 +137,18 @@ void menuTests() {
                         break;
                     }
                 }
-                cout << "Résultat du test : " << fonctionnel << endl;
+                printTest(fonctionnel);
+                break;
+            
+            case 3:
+                p = Point(47.f, 4.f);
+                rayon = 5; 
+                cout << "Test du calcul de la moyenne d'IQA autour du point " << p;
+                cout << " avec un rayon de " << rayon << "."<< endl;
+                moyenneAttendue = 70.4886f;
+                moyenneCalculee = utilisateur.MoyenneIQARegion(p,parser.obtenirCapteurs(),rayon);
+                fonctionnel = abs(moyenneAttendue - moyenneCalculee) < 0.01;
+                printTest(fonctionnel);
                 break;
             default:
                 system("clear");
@@ -179,11 +200,11 @@ int main() {
             case 2:
                 cout << "Veuillez renseigner un numéro d'identification pour le capteur à partir duquel la liste sera générée :" << endl; 
                 cin>>id;
-                for (const auto & capteur : parser.obtenirCapteurs()) {
+                for (const Capteur & capteur : parser.obtenirCapteurs()) {
                     if(capteur.id==id){
-                        vector<pair<string,float>> vec=utilisateur.ObtenirCapteursParSimilarite(capteur, parser.obtenirCapteurs());
-                        for(const auto & cap: vec){
-                            cout << cap.first << " avec un écart d'IQA de " <<cap.second << endl;
+                        vector<pair<string,float>> capSimilaires = utilisateur.ObtenirCapteursParSimilarite(capteur, parser.obtenirCapteurs());
+                        for(const pair<string,float> & cap : capSimilaires){
+                            cout << cap.first << " avec un écart d'IQA de " << cap.second << endl;
                         }
                         break;
                     }
