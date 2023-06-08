@@ -16,6 +16,8 @@ public :
     Capteur(){};
     bool testFiabiliteCapteur(const vector<Capteur> & capteurs, int ecart=20) const;
 
+    friend ostream& operator<<(ostream& os, const Capteur& c);
+
     string id;
     Point position;
     bool valide;

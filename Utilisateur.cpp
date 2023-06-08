@@ -9,7 +9,7 @@ float Utilisateur::MoyenneIQARegion(const Point & coord, const vector<Capteur> &
     date.tm_mday -= 1;
     std::time_t modifiedTime = 0; //std::mktime(&date)
 
-    if (rayon!=0)
+    if (rayon>0)
     {
         int compteur=0;
         for (const auto & c : capteurs)
@@ -24,7 +24,7 @@ float Utilisateur::MoyenneIQARegion(const Point & coord, const vector<Capteur> &
         IQA=IQA/compteur;
 
     }
-    else
+    else if (rayon==0)
     {
         int diviseur=0;
         for(const auto & c : capteurs) {
@@ -41,6 +41,11 @@ float Utilisateur::MoyenneIQARegion(const Point & coord, const vector<Capteur> &
             }
         }
     IQA=IQA/diviseur;
+    }
+    else
+    {
+        cerr<<"ERREUR : rayon négatif";
+        return -1;
     }
     return IQA;
 }

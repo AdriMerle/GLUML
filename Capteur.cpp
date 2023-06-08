@@ -1,6 +1,7 @@
 #include "Capteur.h"
 #include "Utilisateur.h"
 #include <cmath>
+#include <string>
 using namespace std;
 
 bool Capteur::testFiabiliteCapteur(const vector<Capteur> & capteurs, int ecart) const
@@ -35,4 +36,12 @@ vector<Capteur> ObtenirCapteursPotentiellementDefectueux(const vector<Capteur> &
     }
     return capteursDef;
 }
+
+ostream& operator<<(ostream& os, const Capteur& c)
+{
+    
+    os << c.id << c.position;
+    return os;
+}
+
 
