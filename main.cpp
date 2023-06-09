@@ -193,7 +193,6 @@ void menuTests() {
                         fonctionnel = 1;
                         break;
                     }
-
                 }
                 printTest(fonctionnel);
                 break;
@@ -235,12 +234,13 @@ int main() {
     cout << "Performance du parser : ";
     cprint(); creset();
     while(1){
+        creset();
         cout << "=== MENU PRINCIPAL ===" << endl; 
         cout << "\t0: Quit" << endl;
         cout << "\t1: Calculer l'IQA" << endl; 
         cout << "\t2: Obtenir liste capteurs par similarité" << endl; 
         cout << "\t3: Obtenir liste actuelle des capteurs défectueux" << endl;
-        cout << "\t100: Menu Tests" << endl;
+        cout << "\t10: Menu Tests" << endl;
         string input;
         string id;
         cout<<"Choix: ";
@@ -254,16 +254,21 @@ int main() {
         switch(choix) {
             case 0:
                 goto fin;
-            case 100:
+            case 10:
                 menuTests();
                 break;
             case 1:
                 cout << "Moyenne IQA"<< endl;
+                cstart();
                 cout << utilisateur.MoyenneIQARegion(Point(40.5f, 3.5f),parser.obtenirCapteurs(),15) << endl;
+                cstop();
+                cout << "Performance du calcul d'IQA : " ; 
+                cprint();
                 break;
             case 2:
                 cout << "Veuillez renseigner un numéro d'identification pour le capteur à partir duquel la liste sera générée :" << endl; 
                 cin>>id;
+                cstart();
                 for (const Capteur & capteur : parser.obtenirCapteurs()) {
                     if(capteur.id==id){
                         vector<pair<string,float>> capSimilaires = utilisateur.ObtenirCapteursParSimilarite(capteur, parser.obtenirCapteurs());
@@ -273,14 +278,20 @@ int main() {
                         break;
                     }
                 }
+                cstop();
+                cout << "Performance du calcul du classement : " ; 
+                cprint();
                 break;
-            case 3:        
+            case 3:  
                 cout << "Les capteurs défectueux sont :" << endl;
+                cstart();
                 for (const auto & c : ObtenirCapteursPotentiellementDefectueux(parser.obtenirCapteurs())) {
                     cout << c.id << " ";
-                    
                 }
                 cout << endl;
+                cstop();
+                cout << "Performance du calcul des capteurs défectueux : " ; 
+                cprint();
                 break;
             default:
                 system("clear");

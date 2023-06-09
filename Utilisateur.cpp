@@ -44,7 +44,7 @@ float Utilisateur::MoyenneIQARegion(const Point & coord, const vector<Capteur> &
     }
     else
     {
-        cerr<<"ERREUR : rayon négatif";
+        cerr<<"ERREUR : rayon négatif" << endl;
         return -1;
     }
     return IQA;
