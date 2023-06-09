@@ -86,13 +86,14 @@ void menuTests() {
         cout << "=== MENU TESTS ===" << endl;
         cout << "\t0: Retourner au menu principal" << endl;
         cout << "\t1: Tester le parser" << endl; 
-        cout << "\t2: Obtenir liste capteurs par similarité" << endl;
-        cout << "\t3: Calculer l'IQA sur une région donnée avec rayon positif" << endl;
-        cout << "\t4: Calculer l'IQA sur une région donnée avec rayon négatif" << endl;
-        cout << "\t5: Tester la fiabilité d'un capteur fiable" << endl; 
-        cout << "\t6: Tester la fiabilité d'un capteur non fiable " << endl;
-        cout << "\t7: Test de la fonction ObtenirCapteursPotentiellementDefectueux() avec un capteur potentiellement defecteux" << endl;  
-        cout << "\t8: Test de la fonction ObtenirCapteursPotentiellementDefectueux() avec un capteur non defecteux " << endl;
+        cout << "\t2: Obtenir liste capteurs par similarité sur un capteur valide" << endl;
+        cout << "\t3: Obtenir liste capteurs par similarité sur un capteur invalide" << endl;
+        cout << "\t4: Calculer l'IQA sur une région donnée avec rayon positif" << endl;
+        cout << "\t5: Calculer l'IQA sur une région donnée avec rayon négatif" << endl;
+        cout << "\t6: Tester la fiabilité d'un capteur fiable" << endl; 
+        cout << "\t7: Tester la fiabilité d'un capteur non fiable " << endl;
+        cout << "\t8: Test de la fonction ObtenirCapteursPotentiellementDefectueux() avec un capteur potentiellement defecteux" << endl;  
+        cout << "\t9: Test de la fonction ObtenirCapteursPotentiellementDefectueux() avec un capteur non defecteux " << endl;
         string input;
         string id;
         vector<Capteur> capteurs;
@@ -103,6 +104,7 @@ void menuTests() {
         float moyenneAttendue;
         float moyenneCalculee;
         Point p;
+        vector<pair<string,float>> vec = vector<pair<string,float>>();
         int rayon;
         cout<<"Choix: ";
         cin>>input;
@@ -148,8 +150,21 @@ void menuTests() {
                 }
                 printTest(fonctionnel);
                 break;
-            
-            case 3:
+            case 3 :
+                id = "Sensor200";
+                capteurs = parser.obtenirCapteurs();
+                cout << "Test de similarité au capteur " << id << " qui n'existe pas dans la base de données." << endl;
+                fonctionnel = true;
+                for (const Capteur & capteur : capteurs) {
+                    if(capteur.id==id){
+                        vec = utilisateur.ObtenirCapteursParSimilarite(capteur, capteurs);
+                        break;
+                    }
+                }
+                fonctionnel = vec.size()==0;
+                printTest(fonctionnel);
+                break;
+            case 4 :
                 p = Point(47.f, 4.f);
                 rayon = 5; 
                 cout << "Test du calcul de la moyenne d'IQA autour du point " << p;
@@ -159,7 +174,7 @@ void menuTests() {
                 fonctionnel = abs(moyenneAttendue - moyenneCalculee) < 0.01;
                 printTest(fonctionnel);
                 break;
-            case 4:
+            case 5:
                 p = Point(47.f, 4.f);
                 rayon = -5; 
                 cout << "Test du calcul de la moyenne d'IQA autour du point " << p;
@@ -167,21 +182,21 @@ void menuTests() {
                 fonctionnel = (utilisateur.MoyenneIQARegion(p,parser.obtenirCapteurs(),rayon)==-1);
                 printTest(fonctionnel);
                 break;
-            case 5:
+            case 6:
                 capteurs = parser.obtenirCapteurs();
                 cap = capteurs[2];
                 cout << "Test du calcul de la fiabilité du capteur  " << cap << endl;
                 fonctionnel = cap.testFiabiliteCapteur(capteurs)==1; 
                 printTest(fonctionnel);
                 break;
-            case 6:
+            case 7:
                 capteurs = parser.obtenirCapteurs();
                 cap = capteurs[5];
                 cout << "Test du calcul de la fiabilité du capteur  " << cap << endl;
                 fonctionnel = cap.testFiabiliteCapteur(capteurs)==0; 
                 printTest(fonctionnel);
                 break;
-            case 7:
+            case 8:
                 capteurs = parser.obtenirCapteurs();
                 cap = capteurs[5];
                 capteurs.resize(10);
@@ -196,7 +211,7 @@ void menuTests() {
                 }
                 printTest(fonctionnel);
                 break;
-            case 8:
+            case 9:
                 capteurs = parser.obtenirCapteurs();
                 cap = capteurs[2];
                 capteurs.resize(10);
